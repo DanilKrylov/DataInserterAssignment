@@ -1,0 +1,17 @@
+COMMENTS FOR TASKS:
+
+TOTAL COUNT OF ITEMS IN DB: 29889
+
+(I considered the elements to be the same if the 3 listed properties matched.
+The first element from the group was not considered a “duplicate” and was sent to the database)
+
+4) i have created few indexes to improve SELECT queries execution. It should works fine if we havent a lot of inserts\removes\updates to table.
+5) data is read in parts and written to the database in parts.
+Requests to csv and db resources are parallel.
+A retry policy has been configured for csv read process since it is unsafe.
+9) the main problem of large data - we are not able to store it in RAM.
+To solve it i already have implemented step by step receiving of records from csv.
+But for large data we will get issues related to HashSet that we use to prevent duplicates in dataset,
+since HashSet works bad since it has a lot of items(more than 30000-50000). So for large data case we need develop updated algorithm:
+- firstly we should split csv to parts, and find all duplicateIdes using Threads(to have parallel code);
+- secondly we should stay use parallel code and pool of connections to improve performance.
